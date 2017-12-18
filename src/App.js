@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { View } from 'react-native';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import { View, Text } from 'react-native';
+import { createStore, applyMiddleware } from 'redux';
 import firebase from 'firebase';
+import ReduxThunk from 'redux-thunk';
 import reducers from './reducers';
+import LoginForm from './components/LoginForm';
 
 class App extends Component {
   componentWillMount() {
@@ -18,10 +20,14 @@ class App extends Component {
   firebase.initializeApp(config);
   }
   render() {
+    // der 2te Parameter ist für einen initial state, den wir vllt über unsere
+    // Redux App übergeben wollen
+    // das 3te Argument zählt zu den Store enhancers, um den store mehr funktionalität zu verpassen
+    const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
     return (
-      <Provider store={createStore(reducers)}>
+      <Provider store={store}>
         <View>
-          <Text> Hallo Peepz</Text>
+          <LoginForm />
         </View>
       </Provider>
     );
