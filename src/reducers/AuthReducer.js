@@ -2,7 +2,8 @@ import {
   EMAIL_CHANGED,
   PASSWORD_CHANGED,
   LOGIN_USER_SUCCESS,
-  LOGIN_USER_FAIL
+  LOGIN_USER_FAIL,
+  LOGIN_USER
  } from '../actions/types';
 
 // Einen State definieren, der genommen wird zum starten
@@ -10,7 +11,8 @@ const INITIAL_STATE = {
   email: '',
   password: '',
   user: null,
-  error: ''
+  error: '',
+  loading: false
 };
 // Wenn state undefined ist, soll er den Wert der Variablen INITIAL_STATE nehmen
 export default (state = INITIAL_STATE, action) => {
@@ -29,13 +31,20 @@ export default (state = INITIAL_STATE, action) => {
     case PASSWORD_CHANGED:
       return { ...state, password: action.payload };
 
+    case LOGIN_USER:
+      return { ...state, loading: true, error: '' };
+
     case LOGIN_USER_SUCCESS:
-      return { ...state, user: action.payload, error: '' };
+      return { ...state,
+        // Wir nehmen alle state Attribute, anschließend setzen wir sie alle auf den default wert
+        ...INITIAL_STATE,
+        user: action.payload,
+        };
 
     case LOGIN_USER_FAIL:
     console.log('failure');
-    
-      return { ...state, error: 'Authentification failed' };
+
+      return { ...state, error: 'Authentification failed', loading: false };
 
     default:
       return state;

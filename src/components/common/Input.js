@@ -30,7 +30,8 @@ const styles = {
   },
   inputStyle: {
     fontSize: 18,
-    lineHeight: 23,
+    lineHeight: 15,
+    paddingTop: 5,
     paddingLeft: 5,
     paddingRight: 5,
     // das Input Feld nimmt 2/3 ein

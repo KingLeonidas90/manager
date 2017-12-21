@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { emailChanged, passwordChanged, loginUser } from '../actions';
-import { Card, CardSection, Button, Input } from './common';
+import { Card, CardSection, Button, Input, Spinner } from './common';
 
 class LoginForm extends Component {
 
@@ -17,6 +17,17 @@ class LoginForm extends Component {
   onButtonPress() {
     const { email, password } = this.props;
     this.props.loginUser({ email, password });
+  }
+
+  renderButton() {
+    if (this.props.loading) {
+      return <Spinner size='large' />;
+    }
+    return (
+      <Button onPress={this.onButtonPress.bind(this)}>
+      Login
+    </Button>
+    );
   }
 
   renderError() {
@@ -60,9 +71,7 @@ class LoginForm extends Component {
 
 
         <CardSection>
-          <Button onPress={this.onButtonPress.bind(this)}>
-            Login
-          </Button>
+          {this.renderButton()}
         </CardSection>
 
       </Card>
@@ -73,6 +82,8 @@ class LoginForm extends Component {
 const styles = {
   errorStyle: {
     fontSize: 20,
+    paddingTop: 5,
+    paddingBottom: 5,
     alignSelf: 'center',
     color: 'red'
   }
@@ -80,13 +91,19 @@ const styles = {
 
 // Um den State in der Komponenten einzubinden wird diese Funktion verwendet als Schnittstelle
 // Diese verwendet einen globalen state
-const mapStatetoProps = state => {
-  return {
-    email: state.auth.email,
-    password: state.auth.password,
-    error: state.auth.error
+// const mapStatetoProps = state => {
+//   return {
+//     email: state.auth.email,
+//     password: state.auth.password,
+//     error: state.auth.error
+//   };
+// };
+
+// ausgelagerte Form
+  const mapStatetoProps = ({ auth }) => {
+    const { email, password, error, loading } = auth;
+    return { email, password, error, loading };
   };
-};
 // null da es noch keine mapToState methode gibt, 2ter Parameter = der Actioncreator, der verwendet
 // werden soll in diesem fall, emailchanged
 // Sobald der Actioncreator erzeugt wird, steht dieser über die props zur Verfügung
